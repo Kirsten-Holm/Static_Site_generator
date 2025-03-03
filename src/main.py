@@ -4,7 +4,7 @@ from textnode import TextType
 
 
 
-TextNodeObject = TextNode("This is a text node", TextType.Bold, "https://www.boot.dev")
+TextNodeObject = TextNode("This is a text node", TextType.BOLD, "https://www.boot.dev")
 
 
 print(TextNodeObject.__repr__())

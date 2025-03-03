@@ -6,12 +6,12 @@ from enum import Enum
 
 
 class TextType (Enum):
-    Normal = "normal"
-    Bold = "bold"
-    Italic = "italic"
-    Code = "code"
-    Links = "link"
-    Images =  "image"
+    NORMAL = "normal"
+    BOLD = "bold"
+    ITALIC = "italic"
+    CODE = "code"
+    LINKS = "link"
+    IMAGES =  "image"
     
     
 class TextNode:
@@ -21,7 +21,7 @@ class TextNode:
         self.url = url
         
         
-    def __eg__(self,textNode):
+    def __eq__(self,textNode):
         if self.text == textNode.text and self.TextType == textNode.TextType and self.url == textNode.url:
             return True
         return False
