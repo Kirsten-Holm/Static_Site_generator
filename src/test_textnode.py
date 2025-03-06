@@ -3,6 +3,7 @@ import unittest
 from textnode import TextNode, TextType
 
 
+
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
         node =  TextNode("This is a text node", TextType.BOLD)
@@ -28,8 +29,6 @@ class TestTextNode(unittest.TestCase):
         node1 = TextNode("this is a text node",TextType.ITALIC,"https://youtube.com")
         node2 = TextNode("this is a text node",TextType.ITALIC)
         self.assertNotEqual(node1,node2)
-
-
 
 
 if __name__ == "__main__":

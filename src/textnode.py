@@ -6,12 +6,12 @@ from enum import Enum
 
 
 class TextType (Enum):
-    NORMAL = "normal"
+    TEXT = "normal"
     BOLD = "bold"
     ITALIC = "italic"
     CODE = "code"
-    LINKS = "link"
-    IMAGES =  "image"
+    LINK = "link"
+    IMAGE =  "image"
     
     
 class TextNode:
