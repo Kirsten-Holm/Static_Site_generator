@@ -4,7 +4,8 @@ from parentnode import ParentNode
 from htmlnode import HTMLNode
 from leafnode import LeafNode
 from textnode import TextNode,TextType
-from funcs import text_node_to_html_node, split_nodes_delimiter
+import re
+from funcs import *
 
 class TestTextToHtml(unittest.TestCase):
 
@@ -164,5 +165,21 @@ class TestSplitTextNode(unittest.TestCase):
         )
 
 
+
+
+
+class TestExtractMarkdownImages(unittest.TestCase):
+
+    def test_bootdev_example(self):
+        func_result = extract_markdown_images("This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)")
+        self.assertEqual(func_result,[("rick roll", "https://i.imgur.com/aKaOqIh.gif"), ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg")])
+
+
+
+class TestExtractMarkdownLinks(unittest.TestCase):
+    
+    def test_extract_link(self):
+        func_result = extract_markdown_links( "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)")
+        self.assertEqual(func_result,[("to boot dev", "https://www.boot.dev"), ("to youtube", "https://www.youtube.com/@bootdotdev")])
 if __name__ == "__main__":
     unittest.main()
