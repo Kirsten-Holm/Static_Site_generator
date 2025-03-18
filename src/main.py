@@ -9,7 +9,22 @@ from funcs import *
 
 TextNodeObject = TextNode("This is a text node", TextType.BOLD, "https://www.boot.dev")
 
+node_image = TextNode(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
+            TextType.TEXT,
+        )
+node_link = TextNode(
+            "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
+            TextType.TEXT,
+                        )
 
-print(extract_markdown_images("This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"))
+nodes = split_nodes_link([node_link])
 
-print(TextNodeObject.__repr__())
+for node_ in nodes:
+    print(node_)
+
+#images = extract_markdown_images(node.text)
+#for image in images:
+#   print(node.text.split(f"![{image[0]}]({image[1]})"))
+
+#print(TextNodeObject.__repr__())
