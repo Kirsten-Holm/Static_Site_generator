@@ -9,22 +9,23 @@ from funcs import *
 
 TextNodeObject = TextNode("This is a text node", TextType.BOLD, "https://www.boot.dev")
 
-node_image = TextNode(
-            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
-            TextType.TEXT,
-        )
-node_link = TextNode(
-            "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
-            TextType.TEXT,
-                        )
+imagenode = TextNode(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) "
+            "and another ![second image](https://i.imgur.com/3elNhQu.png) and here is a third ![third image](https://i.imgur.com/clunk.png)"
+            "![foruth image](https://i.imgur.com/punnk.png)",
+            TextType.TEXT)
 
-nodes = split_nodes_link([node_link])
+nodes = split_nodes_image([imagenode])
 
-for node_ in nodes:
-    print(node_)
+for node in nodes:
+    print(node)
 
-#images = extract_markdown_images(node.text)
-#for image in images:
-#   print(node.text.split(f"![{image[0]}]({image[1]})"))
 
-#print(TextNodeObject.__repr__())
+"""
+text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+
+nodes = text_to_textnodes(text)
+
+for node in nodes:
+    print(node)
+"""

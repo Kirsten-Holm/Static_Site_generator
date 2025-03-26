@@ -56,32 +56,35 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
 
 def extract_markdown_images(text):
-    images = re.findall(r"!\[(.*?)\]\((.*?)\)",text)
+    images = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)",text)
     return images
 
 def extract_markdown_links(text):
-    links = re.findall(r"\[(.*?)\]\((.*?)\)",text)
+    links = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)",text)
     return links
 
 
 def split_nodes_image(old_nodes):
-
     new_nodes = []
     for node in old_nodes:
-        images = extract_markdown_images(node.text)
-        text_split = []
-        node_text = node.text
-        if images == []:
+        if node.TextType != TextType.TEXT:
             new_nodes.append(node)
-        
+            continue
+
+        node_text = node.text
+        images = extract_markdown_images(node_text)
+
+        if len(images) == 0:
+            new_nodes.append(node)
+            continue
         for image in images:
-            text_split= node_text.split(f"![{image[0]}]({image[1]})")
+            text_split= node_text.split(f"![{image[0]}]({image[1]})", 1)
 
 
             if len(text_split) != 2:
                 raise ValueError ("Markdown Syntax error, link never closed!")
             
-            if text_split[0]!="":
+            if text_split[0] != "":
                 
                 new_nodes.append(TextNode(text_split[0],TextType.TEXT))
 
@@ -89,11 +92,11 @@ def split_nodes_image(old_nodes):
             new_nodes.append(TextNode(image[0],TextType.IMAGE,image[1]))
 
             node_text = text_split[1]
-
-        
+        if node_text != "":
+            new_nodes.append(TextNode(node_text,TextType.TEXT))
 
     return new_nodes
-    
+
 
 
 
@@ -101,32 +104,39 @@ def split_nodes_link(old_nodes):
 
     new_nodes = []
     for node in old_nodes:
-        links = extract_markdown_links(node.text)
-        text_split = []
-        node_text = node.text
-        if links == []:
+        if node.TextType != TextType.TEXT:
             new_nodes.append(node)
-        
+            continue
+        node_text = node.text
+        links = extract_markdown_links(node_text)
+        if len(links) == 0:
+            new_nodes.append(node)
+            continue
         for link in links:
-            text_split= node_text.split(f"[{link[0]}]({link[1]})")
+            text_split= node_text.split(f"[{link[0]}]({link[1]})",1)
 
 
             if len(text_split) != 2:
                 raise ValueError ("Markdown Syntax error, link never closed!")
             
-
-            new_nodes.append(TextNode(text_split[0],TextType.TEXT))
+            if text_split[0] != "":
+                new_nodes.append(TextNode(text_split[0],TextType.TEXT))
 
             new_nodes.append(TextNode(link[0],TextType.LINK,link[1]))
 
             node_text = text_split[1]
+        if node_text != "":
+            new_nodes.append(TextNode(node_text,TextType.TEXT))
         
 
     return new_nodes
 
-"""
+
 def text_to_textnodes(text):
     nodes = [TextNode(text,TextType.TEXT)]
     nodes = split_nodes_delimiter(nodes,"**",TextType.BOLD)
     nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
-"""
+    nodes = split_nodes_delimiter(nodes,"`",TextType.CODE)
+    nodes = split_nodes_image(nodes)
+    nodes = split_nodes_link(nodes)
+    return nodes
