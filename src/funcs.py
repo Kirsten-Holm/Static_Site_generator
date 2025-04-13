@@ -140,3 +140,15 @@ def text_to_textnodes(text):
     nodes = split_nodes_image(nodes)
     nodes = split_nodes_link(nodes)
     return nodes
+
+
+#function for splitting raw markdown representing a full document into a list of "block" strings
+def markdown_to_blocks(markdown):
+    #splitting on double newline as markdown blocks are separated by 1 blank line
+    markdown_blocks = markdown.split("\n\n")
+
+    markdown_blocks = [block.strip() for block in markdown_blocks]
+
+    markdown_blocks = [block for block in markdown_blocks if block.strip()]
+
+    return markdown_blocks

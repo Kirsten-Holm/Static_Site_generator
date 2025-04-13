@@ -268,5 +268,77 @@ class TestTextToTextNode(unittest.TestCase):
         )
 
 
+class TestMarkdownToBlocks(unittest.TestCase):
+
+    def test_markdown_to_blocks(self):
+        md = """
+This is **bolded** paragraph
+
+This is another paragraph with _italic_ text and `code` here
+This is the same paragraph on a new line
+
+- This is a list
+- with items
+        """
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+            blocks,
+            [
+                "This is **bolded** paragraph",
+                "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
+                "- This is a list\n- with items",
+            ],
+        )
+
+
+    def test_markdown_to_blocks_dos(self):
+        md = """
+This might be **bolded** i hope anyway
+this is stuck to the **bolded** text
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+this is a paragraph split wayyyyyyyyy away from the previous one, i hope it works...pls
+
+-this is a list\n-with\n-a\n-new\n-word\n-on\n-every\n-line
+
+-this is a fairly
+-normal list
+-just testin stuff out
+
+
+            """
+        
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+            blocks,
+            [
+                "This might be **bolded** i hope anyway\nthis is stuck to the **bolded** text",
+                "this is a paragraph split wayyyyyyyyy away from the previous one, i hope it works...pls",
+                "-this is a list\n-with\n-a\n-new\n-word\n-on\n-every\n-line","-this is a fairly\n-normal list\n-just testin stuff out"
+            ],
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
