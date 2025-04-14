@@ -22,9 +22,9 @@ def block_to_block(block):
             if not line.startswith(">"):
                 return Blocktype.PARAGRAPH
         return Blocktype.QUOTE
-    if block.startswith("- "):
+    if block.startswith(("- ","* ","+ ")):
         for line in lines:
-            if not line.startswith("- "):
+            if not line.startswith(("- ","* ","+ ")):
                 return Blocktype.PARAGRAPH
         return Blocktype.UNORDERED_LIST
     if block.startswith("1. "):

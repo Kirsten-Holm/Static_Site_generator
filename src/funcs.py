@@ -2,6 +2,7 @@ from htmlnode import HTMLNode
 from parentnode import ParentNode
 from leafnode import LeafNode
 from textnode import TextNode,TextType
+from blocks import Blocktype, block_to_block
 import re
 
 
@@ -152,3 +153,100 @@ def markdown_to_blocks(markdown):
     markdown_blocks = [block for block in markdown_blocks if block.strip()]
 
     return markdown_blocks
+#here i will define some functions to help me make the markdown to html node function
+
+def code_node_handler(block):
+    raw_code_text = block.strip("```")
+    if raw_code_text.startswith("\n"):
+        raw_code_text = raw_code_text[1::]
+    code_text_node = TextNode(raw_code_text,"code")
+
+    code_node = text_node_to_html_node(code_text_node)
+
+    return code_node
+
+
+
+def remove_blockquote_markers(block):
+    lines = block.split("\n")
+
+    lines_clean = []
+
+    for line in lines:
+        if line.startswith(">"):
+            cleaned_line = line[1:].strip(" ")
+            lines_clean.append(cleaned_line)
+        else:
+            lines_clean.append(line)
+
+    return "\n".join(lines_clean)
+
+def quote_handler(block):
+    paragraphs = remove_blockquote_markers(block).split("\n\n")
+
+    formatted_paragraphs =[]
+
+    for paragraph in paragraphs:
+        lines = " ".join(paragraph.splitlines())
+
+        children_text = text_to_textnodes(lines)
+        children = [text_node_to_html_node(child) for child in children_text]
+        p_node = HTMLNode("p",None,children)
+        formatted_paragraphs.append(p_node)
+
+    return formatted_paragraphs
+
+
+
+    return quote_leafnodes
+
+def list_handler(block):
+    list_items = block.splitlines()
+
+    if list_items[0].startswith(("* ","- ","+ ")):
+        list_items_trimmed = [list_item[2::] for list_item in list_items ]
+
+    if list_items[0].startswith("1. "):
+        list_items_trimmed = [list_item[3::] for list_item in list_items]
+
+    list_children = []
+    for item in list_items_trimmed:
+        list_children.append(LeafNode("li",item,None))
+
+    return list_children
+    
+
+def markdown_to_html_node(markdown):
+
+    blocks = markdown_to_blocks(markdown)
+
+    Children_to_add = []
+
+    for block in blocks:
+        block_type = block_to_block(block)
+        
+        match block_type:
+            case Blocktype.PARAGRAPH:
+                block_split_joined = " ".join(block.splitlines())
+                child_paragraph_textnodes = text_to_textnodes(block_split_joined)
+                
+
+                child_paragraph_leafnodes = [text_node_to_html_node(child) for child in child_paragraph_textnodes]
+                Children_to_add.append(HTMLNode("p",None,child_paragraph_leafnodes,None))
+            case Blocktype.HEADING:
+                heading_num = block[:5].count('#')
+                Children_to_add.append(HTMLNode(f"h{heading_num}",block,None,None))
+            case Blocktype.CODE:
+                children_code = code_node_handler(block)
+                Children_to_add.append(HTMLNode("pre", None,[children_code],None))
+            case Blocktype.QUOTE:
+                quote_nodes = quote_handler(block)
+                Children_to_add.append(HTMLNode("blockquote",None,quote_nodes,None))
+            case Blocktype.UNORDERED_LIST:
+                list_items = list_handler(block)
+                Children_to_add.append(HTMLNode("ul",None,list_items,None))
+            case Blocktype.ORDERED_LIST:
+                list_items = list_handler(block)
+                Children_to_add.append(HTMLNode("ol",None,list_items,None))
+    
+    return HTMLNode("div",None ,Children_to_add, None)
