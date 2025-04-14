@@ -3,6 +3,8 @@ from parentnode import ParentNode
 from leafnode import LeafNode
 from textnode import TextNode,TextType
 from blocks import Blocktype, block_to_block
+import os
+import shutil
 import re
 
 
@@ -250,3 +252,31 @@ def markdown_to_html_node(markdown):
                 Children_to_add.append(HTMLNode("ol",None,list_items,None))
     
     return HTMLNode("div",None ,Children_to_add, None)
+
+
+
+
+
+def copy_contents(sourcedir,destdir):
+    if not os.path.exists(sourcedir):
+        raise Exception ("Invalid Path")
+    if os.path.exists(destdir):
+     shutil.rmtree(destdir)
+
+    os.mkdir(destdir)
+
+    for element in os.listdir(sourcedir):
+
+        new_dest = os.path.join(destdir,element)
+        new_source = os.path.join(sourcedir,element)
+        if os.path.isdir(element):
+
+            os.mkdir(new_dest)
+
+            copy_contents(new_source,new_dest)
+
+        if os.path.isfile(new_source):
+            shutil.copy(new_source,new_dest)
+
+
+    
