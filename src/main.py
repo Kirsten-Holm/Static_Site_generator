@@ -21,7 +21,7 @@ template_path = os.path.join(cwd,"template.html")
 
 dest_file_path = os.path.join(dest,"index.html")
 
-basepath = sys.argv
+basepath = sys.argv[1] if len(sys.argv) > 1 else '/'
 
 def main():
     print(basepath)
