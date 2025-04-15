@@ -14,7 +14,7 @@ source = os.path.join(cwd,"static")
 
 dest = os.path.join(cwd,"public")
 
-content_path = os.path.join(cwd,"content/index.md")
+content_path = os.path.join(cwd,"content")
 
 template_path = os.path.join(cwd,"template.html")
 
@@ -26,6 +26,6 @@ def main():
         shutil.rmtree(dest)
     copy_contents(source,dest)
 
-    generate_page(content_path,template_path,dest_file_path)
+    generate_pages_recursive(content_path,template_path,dest)
 
 main()
