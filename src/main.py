@@ -25,7 +25,7 @@ basepath = sys.argv
 
 def main():
     print(basepath)
-    print("Deleting public directory")
+    print(f"Deleting {dest} directory")
     if os.path.exists(dest):
         shutil.rmtree(dest)
     copy_contents(source,dest)
